@@ -129,17 +129,12 @@ class DA(nn.Module):
         return out
 
 
-# -----------------------------
-# 自测
-# -----------------------------
-
 
 class DSFM(nn.Module):
     """
-    双时相版本的 DA：
-    - 先把两时相特征 cat -> 1x1 压回 in_ch，输入 DA 做方向+通道重标定
-    - 使用 abs diff 生成 gate，放大变化区域
-    - 3x3 Conv 映射到 out_ch，接口与 TemporalInteractionBlock 对齐：forward(x1, x2) -> (B, out_ch, H, W)
+    - First, convert the two-time-phase features to 1x1 and compress them into in_ch for input into DA for direction and channel calibration
+    - Use abs diff to generate gates, magnifying the changed areas
+    - 3x3 Convolution maps to out_ch, aligning with the interface of TemporalInteractionBlock: forward(x1, x2) -> (B, out_ch, H, W)
     """
     def __init__(self, in_ch: int, out_ch: int, ksize: int = 7, dilations=(1, 2, 3), ca_ratio: int = 16):
         super().__init__()
@@ -163,7 +158,7 @@ class DSFM(nn.Module):
         )
 
     def forward(self, x1: torch.Tensor, x2: torch.Tensor) -> torch.Tensor:
-        # 形状: (B, C, H, W)
+        #  (B, C, H, W)
         merged = self.merge(torch.cat([x1, x2], dim=1))
         attn = self.spatial_attn(merged)
         gate = self.diff_gate(torch.abs(x1 - x2))
