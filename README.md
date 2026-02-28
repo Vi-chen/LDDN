@@ -53,7 +53,6 @@ pip install -r requirements.txt
 ```bash
 python3 train.py 
 ```
-
 训练过程中会在 `--logpath` 下记录 TensorBoard 日志，并按验证集 `F1_1` 保存最优权重。
 
 ## Test
@@ -61,5 +60,3 @@ python3 train.py
 ```bash
 python3 test.py 
 ```
-- 标签按二值变化检测处理（背景/变化）。
-- 当前仓库为最小链路版本，未包含第三方对比模型分支。
