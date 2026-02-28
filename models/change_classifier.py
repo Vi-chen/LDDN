@@ -7,8 +7,8 @@ import torch
 import torch.nn as nn
 
 from models.DWAM import DWAM
-from models.MIM import DBlock
-from models.Fusion_module import DSFM
+from models.MIM import MIM
+from models.DSFM import DSFM
 
 class ChangeClassifier(Module):
     def __init__(
@@ -47,15 +47,14 @@ class ChangeClassifier(Module):
 
         # frequency refinement applied before temporal interaction (per-scale dual-branch)
         self.freq_blocks = ModuleList(
-            [DWAM(ch, use_fc=True, se_ratio=8) for ch in self.stage_channels]
+            [
+                DWAM(ch, use_fc=True, se_ratio=8) for ch in self.stage_channels
+            ]
         )
 
         self.mdb_refiners = ModuleList(
             [
-                DBlock(ch)
-                for ch in self.refined_channels
-                # DBlock(ch) if idx >= 2 else nn.Identity()
-                # for idx, ch in enumerate(self.refined_channels)
+                MIM(ch) for ch in self.refined_channels
             ]
         )
 
