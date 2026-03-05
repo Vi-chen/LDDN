@@ -129,7 +129,6 @@ def run(args):
 
     model = ChangeClassifier(
         num_classes=args.num_class,
-        num=args.fuse_block,
         pretrained=True,
     ).to(device)
 
