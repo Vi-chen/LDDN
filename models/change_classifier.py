@@ -14,7 +14,6 @@ class ChangeClassifier(Module):
     def __init__(
         self,
         num_classes,
-        num,
         bkbn_name="efficientnet_b4",
         pretrained=True,
         output_layer_bkbn="4",
