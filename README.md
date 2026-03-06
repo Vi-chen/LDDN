@@ -3,9 +3,9 @@
 
 ## Environment
 
-建议使用 Python 3.8+。
+Suggestion to use Python 3.8+。
 
-安装依赖：
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -13,7 +13,7 @@ pip install -r requirements.txt
 
 ## Dataset Format
 
-`dataset/dataset.py` 支持两种组织方式。
+`dataset/dataset.py` Two organizational methods are supported.
 
 ### 1) Folder-split mode
 
@@ -46,14 +46,14 @@ pip install -r requirements.txt
     └── test.txt
 ```
 
-`train.txt/val.txt/test.txt` 中每一行是样本文件名（A/B/label 三个目录同名对应）。
+Each line in `train.txt`, `val.txt` and `test.txt` is the file name of the sample (the names in the A/B/label directories are the same).
 
 ## Train
 
 ```bash
 python3 train.py 
 ```
-训练过程中会在 `--logpath` 下记录 TensorBoard 日志，并按验证集 `F1_1` 保存最优权重。
+During the training process, TensorBoard logs will be recorded under `--logpath`, and the best weights will be saved based on the validation set `F1_1`.
 
 ## Test
 
