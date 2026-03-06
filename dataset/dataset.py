@@ -7,15 +7,15 @@ from glob import glob
 
 class Dataset(data.Dataset):
     """
-    支持两种数据组织方式：
-    1. list 文件方式（与原版完全一致）:
+    Support two data organization methods:：
+    1. List file method:
        data/
          ├── A/
          ├── B/
          ├── label/
          └── list/train.txt
 
-    2. 文件夹划分方式:
+    2. Folder classification method:
        data/
          ├── train/
          │   ├── A/
@@ -34,17 +34,17 @@ class Dataset(data.Dataset):
         self.use_list_mode = os.path.isdir(list_dir)
 
         if self.use_list_mode:
-            print(f"📄 检测到 list 文件夹，使用『列表法』加载数据。")
+            print(f"📄 The 'list' folder was detected. Data was loaded using the 『list method』.")
             self._init_from_list()
         else:
-            print(f"📂 未检测到 list 文件夹，使用『文件夹划分法』加载数据。")
+            print(f"📂 The "list" folder was not detected. Using the 『folder partitioning method』 to load data.")
             self._init_from_folders()
 
-    # === 1. list 模式 ===
+    # === 1. List file method  ===
     def _init_from_list(self):
         list_path = os.path.join(self.file_root, 'list', f'{self.dataset}.txt')
         if not os.path.isfile(list_path):
-            raise FileNotFoundError(f"找不到 {list_path}")
+            raise FileNotFoundError(f"Can't find {list_path}")
         self.file_list = open(list_path).read().splitlines()
 
         self.pre_images = [os.path.join(self.file_root, 'A', x) for x in self.file_list]
@@ -52,7 +52,7 @@ class Dataset(data.Dataset):
         self.gts = [os.path.join(self.file_root, 'label', x) for x in self.file_list]
         self.names = self.file_list
 
-    # === 2. 文件夹划分模式 ===
+    # === 2. Folder classification method ===
     def _init_from_folders(self):
         split_dir = os.path.join(self.file_root, self.dataset)
         dir_t1 = os.path.join(split_dir, 'A')
@@ -61,7 +61,7 @@ class Dataset(data.Dataset):
 
         for d in [dir_t1, dir_t2, dir_lbl]:
             if not os.path.isdir(d):
-                raise FileNotFoundError(f"目录不存在: {d}")
+                raise FileNotFoundError(f"The directory does not exist: {d}")
 
         exts = ('.png', '.jpg', '.jpeg', '.tif', '.tiff')
         t1_files = [os.path.basename(p) for p in self._list_files(dir_t1, exts)]
@@ -70,7 +70,7 @@ class Dataset(data.Dataset):
 
         common = sorted(list(set(t1_files) & set(t2_files) & set(lbl_files)))
         if not common:
-            raise RuntimeError("未找到匹配样本，请检查文件名是否一致。")
+            raise RuntimeError("No matching samples were found. Please check if the file names are consistent.")
 
         self.pre_images = [os.path.join(dir_t1, n) for n in common]
         self.post_images = [os.path.join(dir_t2, n) for n in common]
@@ -95,7 +95,7 @@ class Dataset(data.Dataset):
         label = cv2.imread(self.gts[idx], cv2.IMREAD_GRAYSCALE)
 
         if pre_image is None or post_image is None or label is None:
-            raise RuntimeError(f"读取失败：{name}")
+            raise RuntimeError(f"Read failure：{name}")
 
         img = np.concatenate((pre_image, post_image), axis=2)
 
